@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <title>Spring Boot Application</title>
+    <link rel="stylesheet" href="/css/style.css" />
+</head>
+<body onload="onload()">
+<noscript>
+    <h2>Sorry! Your browser doesn't support Javascript</h2>
+</noscript>
+
+<input class="hidden" id="hidden-id-value"/>
+
+<div id="player-count-page">
+    <div class="count-page-container">
+        <h1 class="title">Enter number of players</h1>
+        <form id="countForm" name="countForm">
+            <div class="form-group">
+                <input type="number" id="count"  autocomplete="off" class="form-control" />
+            </div>
+            <button type="submit" id="countButton" class="accent count-submit">OK</button>
+        </form>
+    </div>
+</div>
+
+<div id="username-page" class="hidden">
+    <div class="username-page-container">
+        <h1 class="title">Type your username</h1>
+        <form id="usernameForm" name="usernameForm">
+            <div class="form-group">
+                <input type="text" id="inputUsername" placeholder="Username" autocomplete="off" class="form-control" />
+            </div>
+            <div class="form-group">
+                <button type="submit" class="accent username-submit">Start!</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="game-page" class="hidden">
+    <div class="game-container">
+        <div class="game-header">
+            <h2>Guess a number!</h2>
+        </div>
+
+        <form id="gameForm" name="gameForm">
+            <div class="form-group">
+
+                <div id="numberField" class="input-group clearfix">
+                    <ul id="guessList">
+
+                    </ul>
+                    <div id="guessInputContainer">
+                        <input type="number" id="guessNumber" placeholder="Guess number..." autocomplete="off" class="form-control" min="0" max="100" autofocus/>
+                        <button id="guessSubmitButton" type="submit" class="accent username-submit">Guess</button>
+                    </div>
+                    <h2 id="waitingHeader" class="hidden">Waiting for others</h2>
+                    </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="result-page" class="hidden">
+    <div class="result-container">
+        <div class="result-header">
+            <h2 id="resultHeader">Result</h2>
+        </div>
+
+        <form id="resultForm" name="gameForm">
+            <div class="form-group">
+                <p id="resultField">
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="/js/MainScript.js"></script>
+</body>
+</html>
