@@ -1,27 +1,28 @@
 'use strict';
 
 var usernamePage = document.querySelector('#username-page');
-var gamePage = document.querySelector('#game-page');
-var playerCountPage = document.querySelector('#player-count-page');
 var usernameForm = document.querySelector('#usernameForm');
+var gamePage = document.querySelector('#game-page');
 var countForm = document.querySelector('#player-count-page');
-var gameForm = document.querySelector('#game-page');
 var resultForm = document.querySelector('#result-page');
 var hiddenInput = document.querySelector('#hidden-id-value');
 var guessArea = document.querySelector('#guessList');
 
 var myStorage = window.localStorage;
 var count;
-var input;
 var interval;
+var resultInterval;
+var inProgress;
 
 function onload() {
-    if (myStorage.getItem("count") > -1 && myStorage.getItem("count") != null) {
-        countForm.classList.add('hidden');
-        usernamePage.classList.remove('hidden');
-        console.log(sessionStorage.getItem("currentIdValue"));
-        hiddenInput.value = sessionStorage.getItem("currentIdValue");
-    }
+    $.ajax({
+        url: window.location.href + "init"
+    }).then(function(data) {
+        if(data.initPlayers == true) {
+            countForm.classList.add('hidden');
+            usernamePage.classList.remove('hidden');
+        }
+    });
 }
 
 function onCountSubmit(event) {
@@ -36,42 +37,62 @@ function onCountSubmit(event) {
         countForm.classList.add('hidden');
         usernamePage.classList.remove('hidden');
 
-        var i;
-        for(i = 1; i < count; i++) {
-            sessionStorage.setItem("currentIdValue",i);
-            window.open("http://localhost:8080/", "_blank");
-        }
         $.ajax({
-            url: "http://localhost:8080/game/"+count
+            url: window.location.href + "game/"+count
         });
     }
     event.preventDefault();
 }
 
 function setUsername(event) {
-console.log(hiddenInput.value)
-console.log(document.querySelector('#inputUsername').value.trim())
-
     $.ajax({
-        url: "http://localhost:8080/game/username/" + hiddenInput.value +"/" + document.querySelector('#inputUsername').value.trim()
+        url: window.location.href + "game/username/" + document.querySelector('#inputUsername').value.trim()
+    }).then(function(data) {
+        hiddenInput.value = data.id;
+
+        if(data.inProgress == false) {
+            document.querySelector('#usernameForm').classList.add('hidden');
+            document.querySelector('#userHeader').classList.add('hidden');
+            var usernameHeader = document.querySelector('#waitingUsernameHeader');
+            var usernameLink = document.querySelector('#link');
+            usernameHeader.classList.remove('hidden');
+            usernameLink.classList.remove('hidden');
+            usernameHeader.innerHTML  = "Waiting for other players to join (" + data.count + " players remains)";
+            usernameLink.innerHTML = "Please consider giving this link to your friends: " + window.location.href;
+            setWaitingInterval();
+        } else {
+            usernamePage.classList.add('hidden');
+            gamePage.classList.remove('hidden');
+        }
     });
 
-    usernamePage.classList.add('hidden');
-    gamePage.classList.remove('hidden');
-
     event.preventDefault();
+}
+
+function setWaitingInterval() {
+    interval = setInterval(function() { getGameStatus() }, 3000);
+}
+
+function getGameStatus() {
+    $.ajax({
+        url: window.location.href + "game/status/"
+    }).then(function(data) {
+        if (data.inProgress == true) {
+            usernamePage.classList.add('hidden');
+            gamePage.classList.remove('hidden');
+            clearInterval(interval);
+        } else {
+            document.querySelector('#waitingUsernameHeader').value("Waiting for other players to join (" + data.count + " players remains)");
+        }
+    });
 }
 
 function sendNumber(event) {
     var value = document.querySelector('#guessNumber');
 
     $.ajax({
-        url: "http://localhost:8080/game/progress/" + hiddenInput.value +"/" + value.value.trim()
+        url: window.location.href + "game/progress/" + hiddenInput.value +"/" + value.value.trim()
     }).then(function(data) {
-
-        console.log(data)
-
-        myStorage.setItem("inProgress", data.inProgress);
 
         if (data.guessed == false) {
             setMessage(data.message);
@@ -79,9 +100,10 @@ function sendNumber(event) {
             setMessage(data.message);
             document.querySelector('#guessInputContainer').classList.add('hidden');
             document.querySelector('#waitingHeader').classList.remove('hidden');
-            interval();
+            intervalInit();
+
         }
-    });;
+    });
 
     value.value = "";
     event.preventDefault();
@@ -94,29 +116,36 @@ function setMessage(message) {
     guessArea.appendChild(listMessage);
 }
 
-function interval() {
-    myStorage.setItem("count", -1);
-    interval = setInterval(function() { getResult() }, 1000);
+function intervalInit() {
+    resultInterval = setInterval(function() { getResult() }, 1000);
 }
 
 function getResult() {
-    myStorage = window.localStorage;
-    console.log(myStorage);
-    if(myStorage.getItem("inProgress") == "false") { console.log("myStorage");
-        clearInterval(interval);
-        gameForm.classList.add('hidden');
-        resultForm.classList.remove('hidden');
+    $.ajax({
+        url: window.location.href + "game/status/"
+    }).then(function(data) {
+        inProgress = data.inProgress;
+        if(inProgress == false) {
+            clearInterval(resultInterval);
+            gamePage.classList.add('hidden');
+            resultForm.classList.remove('hidden');
+            getResultTwo();
+        }
+    });
+}
 
+function getResultTwo() {
+    if(inProgress == false) {
         $.ajax({
-            url: "http://localhost:8080/game/results/"
-        }).then(function(data) {
+            url: window.location.href + "game/results/"
+        }).then(function(dataTwo) {
             var field = document.querySelector('#resultField');
-            var message = document.createTextNode(data.message);
+            var message = document.createTextNode(dataTwo.message);
             field.appendChild(message);
-        });;
+        });
     }
 }
 
 countForm.addEventListener("submit", onCountSubmit, true);
 usernameForm.addEventListener("submit", setUsername, true);
-gameForm.addEventListener("submit", sendNumber, true);
+gamePage.addEventListener("submit", sendNumber, true);

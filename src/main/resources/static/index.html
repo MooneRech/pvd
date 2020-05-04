@@ -25,8 +25,8 @@
 </div>
 
 <div id="username-page" class="hidden">
-    <div class="username-page-container">
-        <h1 class="title">Type your username</h1>
+    <div id="username-page-container" class="username-page-container">
+        <h1 id="userHeader" class="title">Type your username</h1>
         <form id="usernameForm" name="usernameForm">
             <div class="form-group">
                 <input type="text" id="inputUsername" placeholder="Username" autocomplete="off" class="form-control" />
@@ -35,28 +35,30 @@
                 <button type="submit" class="accent username-submit">Start!</button>
             </div>
         </form>
+        <h2 id="waitingUsernameHeader" class="hidden"></h2>
+        <h3 id="link" class="hidden"></h3>
     </div>
 </div>
 
 <div id="game-page" class="hidden">
     <div class="game-container">
+
         <div class="game-header">
             <h2>Guess a number!</h2>
         </div>
 
         <form id="gameForm" name="gameForm">
             <div class="form-group">
-
                 <div id="numberField" class="input-group clearfix">
-                    <ul id="guessList">
+                    <ul id="guessList"></ul>
 
-                    </ul>
                     <div id="guessInputContainer">
                         <input type="number" id="guessNumber" placeholder="Guess number..." autocomplete="off" class="form-control" min="0" max="100" autofocus/>
                         <button id="guessSubmitButton" type="submit" class="accent username-submit">Guess</button>
                     </div>
+
                     <h2 id="waitingHeader" class="hidden">Waiting for others</h2>
-                    </div>
+                </div>
             </div>
         </form>
     </div>

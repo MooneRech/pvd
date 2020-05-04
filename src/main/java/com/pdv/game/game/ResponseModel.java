@@ -12,19 +12,34 @@ public class ResponseModel {
 
     private boolean inProgress;
 
-    private int turn;
+    private boolean initPlayers;
+
+    private int count;
+
+    ResponseModel() {
+        setHasWinner(false);
+        setInProgress(false);
+        setInitPlayers(false);
+    }
 
 //   =============================
 //         GETTERS & SETTERS
 //   =============================
 
-
-    public int getTurn() {
-        return turn;
+    public int getCount() {
+        return count;
     }
 
-    public void setTurn(int turn) {
-        this.turn = turn;
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public boolean isInitPlayers() {
+        return initPlayers;
+    }
+
+    public void setInitPlayers(boolean initPlayers) {
+        this.initPlayers = initPlayers;
     }
 
     public boolean getInProgress() {

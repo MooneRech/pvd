@@ -19,35 +19,36 @@ public class Game {
     boolean gameInProcess;
     private ResponseModel responseModel;
     private int lesserValue;
+    private Boolean startFromBeginning;
 
     Scanner scn = new Scanner(System.in);
+
+    Game() {
+        gameInProcess = false;
+        startFromBeginning = false;
+        responseModel = new ResponseModel();
+    }
 
     public void initGame() {
         playTheGame = true;
         hasWinner = false;
-        gameInProcess = true;
-        responseModel = new ResponseModel();
-        initPlayers();
-        initNumber();
-        responseModel.setHasWinner(false);
-        responseModel.setInProgress(true);
-        lesserValue = -1;
-    }
-
-    private void initPlayers() {
+        gameInProcess = false;
         playerList = new ArrayList<>();
-        for(int i = 0; i < playerCount; i++) {
-            Player player = new Player();
-            player.setOrderNumber(i);
-            player.setGuessCount(0);
-            player.setGuessed(false);
-            playerList.add(player);
-        }
+        lesserValue = -1;
+        initNumber();
+        responseModel.setInitPlayers(true);
     }
 
-    public void addPlayer(int id, String username) {
-        Player player = playerList.get(id);
+    public ResponseModel addPlayer(String username) {
+        Player player = new Player();
         player.setName(username);
+        playerList.add(player);
+        responseModel.setId(playerList.size()-1);
+        responseModel.setCount(playerCount - playerList.size());
+        if(playerCount == playerList.size()) {
+            responseModel.setInProgress(true);
+        }
+        return responseModel;
     }
 
     public ResponseModel enterNumber(int id, int number) {
@@ -78,6 +79,7 @@ public class Game {
         for (Player value : playerList) {
             if(!value.isGuessed()) {
                 gameInProcess = true;
+                break;
             }
         }
 
@@ -89,6 +91,7 @@ public class Game {
     }
 
     public ResponseModel endGame() {
+        startFromBeginning = true;
         String message = "";
 
         for(Player player : playerList) {
@@ -121,6 +124,14 @@ public class Game {
 //   =============================
 //         GETTERS & SETTERS
 //   =============================
+
+    public Boolean getStartFromBeginning() {
+        return startFromBeginning;
+    }
+
+    public void setStartFromBeginning(Boolean startFromBeginning) {
+        this.startFromBeginning = startFromBeginning;
+    }
 
     public ResponseModel getResponseModel() {
         return responseModel;

@@ -21,6 +21,11 @@ public class Player {
 //             FUNCTIONS
 //   =============================
 
+    Player() {
+        setGuessCount(0);
+        setGuessed(false);
+    }
+
     public void guessNumber(int number) {
         guessCount++;
         guessNumber = number;
