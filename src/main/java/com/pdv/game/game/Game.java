@@ -1,34 +1,22 @@
 package com.pdv.game.game;
 
+import com.pdv.game.controller.ResponseModel;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
 
-/**
- *
- * @author IR00300
- */
-public class Game {
+public class Game extends GameOld {
 
-    private int randNumber;
-    private int playerCount;
-    private List<Player> playerList;
-    boolean hasWinner;
-    boolean playTheGame;
     boolean gameInProcess;
     private ResponseModel responseModel;
     private int lesserValue;
-    private Boolean startFromBeginning;
+    private boolean startFromBeginning;
 
-    Scanner scn = new Scanner(System.in);
-
-    Game() {
+    public Game() {
         gameInProcess = false;
         startFromBeginning = false;
         responseModel = new ResponseModel();
     }
 
+    @Override
     public void initGame() {
         playTheGame = true;
         hasWinner = false;
@@ -115,11 +103,6 @@ public class Game {
         return message;
     }
 
-    public void initNumber() {
-        Random rand = new Random();
-        randNumber = rand.nextInt((100 - 0) + 1);
-        System.out.println(randNumber);
-    }
 
 //   =============================
 //         GETTERS & SETTERS
@@ -139,30 +122,6 @@ public class Game {
 
     public void setResponseModel(ResponseModel responseModel) {
         this.responseModel = responseModel;
-    }
-
-    public int getPlayerCount() {
-        return playerCount;
-    }
-
-    public void setPlayerCount(int playerCount) {
-        this.playerCount = playerCount;
-    }
-
-    public int getRandNumber() {
-        return randNumber;
-    }
-
-    public void setRandNumber(int randNumber) {
-        this.randNumber = randNumber;
-    }
-
-    public List<Player> getPlayerList() {
-        return playerList;
-    }
-
-    public void setPlayerList(List<Player> playerList) {
-        this.playerList = playerList;
     }
 
 }
