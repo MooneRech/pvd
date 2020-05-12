@@ -82,6 +82,17 @@ public class Game extends GameOld {
         startFromBeginning = true;
         String message = "";
 
+        if(playerCount == 1) {
+            Player pl = new Player();
+            AI ai = new AI();
+            pl =  ai.findNumber(randNumber);
+            playerList.add(pl);
+
+            if (lesserValue > pl.getGuessCount()) {
+                lesserValue = pl.getGuessCount();
+            }
+        }
+
         for(Player player : playerList) {
             message = message + player.toString();
         }
